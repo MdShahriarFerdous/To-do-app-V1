@@ -1,0 +1,27 @@
+<%- include("header"); -%>
+<!-- here h1 is taking the kindOfData from server -->
+<div class="box" id="heading">
+	<h1><%= titleBar %></h1>
+</div>
+
+<div class="box">
+	<% for( let i = 0; i< incomingData.length; i++ ) { %>
+
+	<div class="item">
+		<input type="checkbox" />
+		<p><%= incomingData[i] %></p>
+	</div>
+	<% } %>
+	<!-- how many items the incomingData array have it will create a list item for each -->
+
+	<form class="item" action="/" method="post">
+		<input
+			type="text"
+			name="item"
+			placeholder="New Item"
+			autocomplete="off"
+		/>
+		<button type="submit" name="list" value="<%= titleBar %>">+</button>
+	</form>
+</div>
+<%- include("footer"); -%>

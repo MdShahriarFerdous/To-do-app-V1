@@ -1,0 +1,113 @@
+-------------------------------------------V1----------------------------------
+const express = require("express");
+const bodyParser = require("body-parser");
+
+const app = express();
+
+app.set("view engine", "ejs");
+
+app.get("/", (req, res) => {
+	let today = new Date(); //it will give the latest date
+	let weekDay = today.getDay(); // from the latest date it will choose today and convert it into number value.
+	/* like if today is sunday then it will give 0
+	monday = 1
+	tuesday = 2
+	wednesday = 3
+	thursday = 4
+	friday = 5 
+	so the weekDay variable will turn into number*/
+	let day = ""; //here we have taken empty string variable so that we can add our value later.
+
+	switch (weekDay) {
+		case 0:
+			day = "Sunday";
+			break;
+		case 1:
+			day = "Monday";
+			break;
+		case 2:
+			day = "Tuesday";
+			break;
+		case 3:
+			day = "Wednesday";
+			break;
+		case 4:
+			day = "Thursday";
+			break;
+		case 5:
+			day = "Friday";
+		case 6:
+			day = "Saturday";
+
+		default:
+			console.log("Current date is equal to:", weekDay);
+			break;
+	}
+	res.render("list", { kindOfDay: day });
+});
+
+app.listen(3000, () => {
+	console.log("Server is working");
+});
+------------------------------------------V2--------------------------------------------
+
+
+const express = require("express");
+const bodyParser = require("body-parser");
+
+const app = express();
+app.use(express.static("public"));
+const lists = ["Buy food", "Cook food", "Eat food"];
+
+const workItem = [];
+//
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.set("view engine", "ejs");
+
+app.get("/", (req, res) => {
+	let today = new Date(); //it will give the latest date
+
+	let options = {
+		weekday: "short",
+		day: "numeric",
+		month: "long",
+	};
+
+	let day = today.toLocaleDateString("en-US", options);
+
+	res.render("list", { titleBar: day, incomingData: lists });
+});
+
+app.post("/", (req, res) => {
+	let nlist = req.body.item;
+
+	if (req.body.list === "Work List") {
+		workItem.push(nlist);
+		res.redirect("/work");
+	} else {
+		lists.push(nlist);
+		res.redirect("/");
+	}
+
+	//button will give resonse to home route
+});
+
+app.get("/work", function (req, res) {
+	res.render("list", { titleBar: "Work List", incomingData: workItem });
+});
+
+// No need because the form input is coming to the home route
+// app.post("/work", function (req, res) {
+// 	let nlist = req.body.item;
+// 	workItem.push(nlist);
+// 	res.redirect("/work");
+// });
+
+app.get("/about", function (req, res) {
+	res.render("about");
+});
+
+app.listen(3000, () => {
+	console.log("Server is working");
+});
